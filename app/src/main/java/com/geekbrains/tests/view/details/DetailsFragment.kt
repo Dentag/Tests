@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.geekbrains.tests.R
 import com.geekbrains.tests.presenter.details.DetailsPresenter
@@ -36,6 +37,10 @@ class DetailsFragment : Fragment(), ViewDetailsContract {
         }
         decrementButton.setOnClickListener { presenter.onDecrement() }
         incrementButton.setOnClickListener { presenter.onIncrement() }
+        starButton.setOnClickListener { starButton.isVisible = !starButton.isVisible }
+        counterButton.setOnClickListener {
+            counterButton.text = arguments?.getInt(TOTAL_COUNT_EXTRA).toString()
+        }
     }
 
     override fun setCount(count: Int) {

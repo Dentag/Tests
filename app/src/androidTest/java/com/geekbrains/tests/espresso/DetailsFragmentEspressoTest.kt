@@ -7,12 +7,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.geekbrains.tests.R
 import com.geekbrains.tests.TEST_NUMBER_OF_RESULTS_PLUS_1
 import com.geekbrains.tests.view.details.DetailsFragment
+import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,7 +27,7 @@ class DetailsFragmentEspressoTest {
     @Before
     fun setup() {
         //Запускаем Fragment в корне Activity
-        scenario = launchFragmentInContainer()
+        scenario = launchFragmentInContainer(themeResId = R.style.Theme_Tests)
     }
 
     @Test
@@ -55,4 +57,25 @@ class DetailsFragmentEspressoTest {
         onView(withId(R.id.incrementButton)).perform(click())
         onView(withId(R.id.totalCountTextView)).check(matches(withText(TEST_NUMBER_OF_RESULTS_PLUS_1)))
     }
+
+    @Test
+    fun fragment_testStarButton() {
+        onView(withId(R.id.starButton)).perform(click())
+        onView(withId(R.id.starButton)).check(matches(not(isDisplayed())))
+    }
+
+    @Test
+    fun fragment_testCounterButton_no_arguments() {
+        onView(withId(R.id.counterButton)).perform(click())
+        onView(withId(R.id.counterButton)).check(matches(withText("NULL")))
+    }
+
+    @Test
+    fun fragment_testCounterButton_with_arguments() {
+        val fragmentArgs = bundleOf("TOTAL_COUNT_EXTRA" to 10)
+        val scenario = launchFragmentInContainer<DetailsFragment>(fragmentArgs)
+        onView(withId(R.id.counterButton)).perform(click())
+        onView(withId(R.id.counterButton)).check(matches(withText("10")))
+    }
+
 }
